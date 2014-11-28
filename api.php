@@ -97,18 +97,18 @@ if($classID){
                	 	if(is_array($classValue)){
 				$class = pregMatch($classValue[0]);
 				if(is_array($class)){
-					echo response($type,$class);
+					echo $class = response($type,$class);
 				}else{
 					$error = $class;
-					echo response($type,"err",$error);
+					echo $class = response($type,"err",$error);
 				}
 			}else{
 				$error = $classValue;
-				echo response($type,"err",$error);	
+				echo $class = response($type,"err",$error);	
 			}
 		}else{
 			$error = $mysqli;
-			echo response($type,"err",$error);
+			echo $class = response($type,"err",$error);
 		}		
 	}
 }
