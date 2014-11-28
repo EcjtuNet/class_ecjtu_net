@@ -11,28 +11,28 @@ require './config.php';
 
 function connect()
 {
+	$config = $GLOBALS['config'];
 	$mysqli = new mysqli();
         $mysqli->connect($config['db_host'],$config['db_user'],$config['db_pswd'],$config['db_name']);  
-	if(isset($mysqli->connect_errno)){
+	if($mysqli->connect_errno){
 		return $error = "fail to connect ErrMsg:".$mysqli->connect_error;
 	}else{
 		$mysqli->query('SET NAMES UTF8');
 		return $mysqli;
 	}
-
 }
 
 function getClassValue($mysqli,$classID)
 {	
-	$sql = "SELECT course FROM class WHERE cid = '$classID' AND term = 
-'$config[term]'";
+	$config = $GLOBALS['config'];
+	$sql = "SELECT course FROM class WHERE cid = '".$classID."' AND term = '".$config['term']."'";
 	$rs = $mysqli->query($sql);
 	if($rs){
 		$row = $rs->fetch_row();
 		$classValue = $row;
 		return $classValue;
 	}else{
-		return $error="fail get data from database";
+		return $error=$mysqli->error;
 	}
 }
 
@@ -46,9 +46,9 @@ $redis->rpush('class:api:count',time());
 
 
 // get classID and return type
-$classID = isset($_GET['classID'])?$_GET['classID']:isset($_POST['classID'])?$_POST['classID']:false;
+$classID = isset($_POST['classID']) ? $_POST['classID'] : isset($_GET['classID']) ? $_GET['classID'] : false;
 
-$type = isset($_GET['callback'])?'jsonp':isset($_POST['type'])?$_POST['type']:'json';
+$type = isset($_POST['type']) ? $_POST['type'] : isset($_GET['callback']) ? 'jsonp' : 'json';
 
 //return json function
 function response($type,$content,$error)
@@ -71,15 +71,11 @@ function pregMatch($string)
 	 $pattern="/<td><div align=\"center\"><font size=\"2\">(.*?)<\/font><\/div><\/td>/";
          preg_match_all($pattern, $string, $matches);
          if(preg_last_error() == PREG_NO_ERROR){
-         	for ($i=0; $i <40 ; $i++) {
-                        //$matches[1][$i]=str_replace("&nbsp;","无课",$matches[1][$i]);
-                	if($matches[1][$i] == "&nbsp;") $matches[1][$i] = "休息～！";
-                }
-		$result = array();
-		for($i=0;$i<40;$i+8){
+         	$result = array();// $day = array();
+		for ($i=0; $i <40 ; $i++) {
+			$matches[1][$i]=str_replace("<br>", "\n", str_replace("&nbsp;"," ",$matches[1][$i]));
 			$mod = $i%8;
-			if($mod==0) continue ;
-			else array_push($result[$mod],$matches[1][$i]);
+			$result[$mod][] = $matches[1][$i];
 		}
 		return $result;
                        
