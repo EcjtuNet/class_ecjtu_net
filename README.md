@@ -84,7 +84,7 @@
     "error": null
 }
 ```
-*jsonp
+* jsonp
 
      callback(json)
 ```javascript
