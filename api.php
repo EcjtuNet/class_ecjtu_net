@@ -32,7 +32,7 @@ function getClassValue($mysqli,$classID)
 		$classValue = $row;
 		return $classValue;
 	}else{
-		return $error 
+		return $error="fail get data from database";
 	}
 }
 
