@@ -54,7 +54,7 @@ $type = isset($_GET['callback'])?'jsonp':isset($_POST['type'])?$_POST['type']:'j
 function response($type,$content,$error)
 {
 	$content = array('content'=>$content,'error'=>$error);
-	$reback = json_encode($content,JSON_FORCE_OBJECT)
+	$reback = json_encode($content,JSON_FORCE_OBJECT);
 	if($type == 'jsonp'){
 		$reback = 'callback('.$reback.')';
 	}
@@ -76,9 +76,10 @@ function pregMatch($string)
                 	if($matches[1][$i] == "&nbsp;") $matches[1][$i] = "休息～！";
                 }
 		$result = array();
-		for($i=0;$i<40,$i+8){
+		for($i=0;$i<40;$i+8){
 			$mod = $i%8;
-			($mod==0)?continue:array_push($result[$mod],$matches[1][$i]);
+			if($mod==0) continue ;
+			else array_push($result[$mod],$matches[1][$i]);
 		}
 		return $result;
                        
