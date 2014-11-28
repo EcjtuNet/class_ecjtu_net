@@ -7,6 +7,7 @@
 */
 // init 
 // mysqli function
+header("Content-type:application/x-javascript");
 require './config.php';
 
 function connect()
