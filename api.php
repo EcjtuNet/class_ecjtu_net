@@ -49,6 +49,7 @@ $redis->rpush('class:api:count',time());
 $classID = isset($_POST['classID']) ? $_POST['classID'] : isset($_GET['classID']) ? $_GET['classID'] : false;
 
 $type = isset($_POST['type']) ? $_POST['type'] : isset($_GET['callback']) ? 'jsonp' : 'json';
+$callback = empty($_GET['callback'])?'callback':$_GET['callback'];
 
 //return json function
 function response($type,$content,$error)
@@ -56,7 +57,7 @@ function response($type,$content,$error)
 	$content = array('content'=>$content,'error'=>$error);
 	$reback = json_encode($content,JSON_FORCE_OBJECT);
 	if($type == 'jsonp'){
-		$reback = 'callback('.$reback.')';
+		$reback = $GLOBALS['callback'].'('.$reback.')';
 	}
 	return $reback;
 }
